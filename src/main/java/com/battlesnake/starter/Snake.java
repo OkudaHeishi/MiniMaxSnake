@@ -3,6 +3,7 @@ package com.battlesnake.starter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -18,12 +19,6 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.get;
 
-/**
- * This is a simple Battlesnake server written in Java.
- * 
- * For instructions see
- * https://github.com/BattlesnakeOfficial/starter-snake-java/README.md
- */
 public class Snake {
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
     private static final Handler HANDLER = new Handler();
@@ -95,7 +90,7 @@ public class Snake {
 
         /**
          * This method is called everytime your Battlesnake is entered into a game.
-         * 
+         *
          * Use this method to decide how your Battlesnake is going to look on the board.
          *
          * @return a response back to the engine containing the Battlesnake setup
@@ -128,11 +123,7 @@ public class Snake {
         /**
          * This method is called on every turn of a game. It's how your snake decides
          * where to move.
-         * 
-         * Use the information in 'moveRequest' to decide your next move. The
-         * 'moveRequest' variable can be interacted with as
-         * com.fasterxml.jackson.databind.JsonNode, and contains all of the information
-         * about the Battlesnake board for each move of the game.
+         *
          * 
          * For a full example of 'json', see
          * https://docs.battlesnake.com/references/api/sample-move-request
@@ -142,6 +133,8 @@ public class Snake {
          * @return a Map<String,String> response back to the engine the single move to
          *         make. One of "up", "down", "left" or "right".
          */
+
+
         public Map<String, String> move(JsonNode moveRequest) {
 
             try {
@@ -150,14 +143,13 @@ public class Snake {
                 LOG.error("Error parsing payload", e);
             }
 
-            /*
-             * Example how to retrieve data from the request payload:
-             * 
-             * String gameId = moveRequest.get("game").get("id").asText();
-             * 
-             * int height = moveRequest.get("board").get("height").asInt();
-             * 
-             */
+            JsonNode gameData = moveRequest.get("game");
+            JsonNode mySnake = moveRequest.get("you");
+            JsonNode board = moveRequest.get("board");
+            int turn = moveRequest.get("turn").asInt();
+            String gameId = gameData.get("id").asText();
+
+            ArrayNode snakes = (ArrayNode) board.get("snakes");
 
             JsonNode head = moveRequest.get("you").get("head");
             JsonNode body = moveRequest.get("you").get("body");
@@ -167,21 +159,6 @@ public class Snake {
             // Don't allow your Battlesnake to move back in on it's own neck
             avoidMyNeck(head, body, possibleMoves);
 
-            // TODO: Using information from 'moveRequest', find the edges of the board and
-            // don't
-            // let your Battlesnake move beyond them board_height = ? board_width = ?
-
-            // TODO Using information from 'moveRequest', don't let your Battlesnake pick a
-            // move
-            // that would hit its own body
-
-            // TODO: Using information from 'moveRequest', don't let your Battlesnake pick a
-            // move
-            // that would collide with another Battlesnake
-
-            // TODO: Using information from 'moveRequest', make your Battlesnake move
-            // towards a
-            // piece of food on the board
 
             // Choose a random direction to move in
             final int choice = new Random().nextInt(possibleMoves.size());
