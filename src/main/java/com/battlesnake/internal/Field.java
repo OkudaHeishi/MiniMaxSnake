@@ -2,10 +2,10 @@ package com.battlesnake.internal;
 
 public class Field {
     public Occupant occupant;
-    public String id;
+    public int id;
     public Direction direction;
 
-    public Field(Occupant o, String id, Direction d) {
+    public Field(Occupant o, int id, Direction d) {
         occupant = o;
         this.id = id;
         direction = d;
@@ -13,7 +13,7 @@ public class Field {
 
     public Field(Occupant o) {
         occupant = o;
-        id = null;
+        id = 0;
         direction = Direction.NORTH;
     }
 

@@ -26,6 +26,31 @@ public class Snake {
         }
     }
 
+    public int EffectiveLength() {
+        return body.size() - GrowthLeft();
+    }
+
+    public Point getTail() {
+        return this.body.get(body.size() - 1);
+    }
+
+    public int GrowthLeft() {
+        int result = 0;
+        Point tail = getTail();
+
+        for (int i = body.size() - 2; i >= 0; --i) {
+            if (body.get(i) == tail) ++result;
+            else break;
+        }
+
+        return result;
+
+    }
+
+    public Point getHead() {
+        return this.body.get(0);
+    }
+
     public String getId() {
         return id;
     }
@@ -41,5 +66,6 @@ public class Snake {
     public void setHealth(int health) {
         this.health = health;
     }
+
 }
 

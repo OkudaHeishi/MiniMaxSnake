@@ -12,7 +12,7 @@ public class Board {
     public int width;
     public int height;
     public ArrayList<Point> food;
-    public HashMap<String, Snake> snakes;
+    public ArrayList<Snake> snakes;
 
     public Board(JsonNode board) {
         this.width = board.get("width").asInt();
@@ -27,10 +27,10 @@ public class Board {
 
         ArrayNode snakeNodes = (ArrayNode) board.get("snakes");
 
-        this.snakes = new HashMap<>();
+        this.snakes = new ArrayList<>();
 
         for (JsonNode snakeNode: snakeNodes) {
-            this.snakes.put(snakeNode.get("id").asText(), new Snake(snakeNode));
+            this.snakes.add(new Snake(snakeNode));
         }
     }
 
