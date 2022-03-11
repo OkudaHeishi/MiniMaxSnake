@@ -1,6 +1,9 @@
 package com.battlesnake.ai;
 
+import com.battlesnake.ai.heuristics.ReflexEvasionHeuristic;
 import com.battlesnake.internal.Direction;
+import com.battlesnake.internal.SimWorld;
+import com.battlesnake.internal.Snake;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
@@ -8,6 +11,70 @@ import java.awt.*;
 import java.util.*;
 
 public class utils {
+
+    public static Point[] Moves = {
+            new Point( 1, 0),
+            new Point(-1, 0),
+            new Point( 0, 1),
+            new Point( 0,-1)
+    };
+
+    public static Direction[] Directions = {
+            Direction.NORTH,
+            Direction.WEST,
+            Direction.SOUTH,
+            Direction.EAST
+    };
+
+    public class FillTile {
+        public int snake;
+        public int distance;
+
+        public FillTile(int snake, int distance) {
+            this.snake = snake;
+            this.distance = distance;
+        }
+    }
+
+    private class FillItem {
+        public int snake;
+        public int distance;
+        public Point point;
+
+        public FillItem(int snake, int distance, Point point) {
+            this.snake = snake;
+            this.distance = distance;
+            this.point = point;
+        }
+    }
+
+    public class BasicFillItem {
+        public Point point;
+        public int distance;
+
+        public BasicFillItem(Point point, int distance){
+            this.point = point;
+            this.distance = distance;
+        }
+    }
+
+    public static Direction ImprovedReflexBasedEvade(SimWorld board, int index) throws Exception {
+        Direction best = Direction.NORTH;
+        float bestScore = Float.NEGATIVE_INFINITY;
+
+        for (int i = 0; i < Directions.length; ++i) {
+            Direction d = Directions[i];
+
+            float score = ReflexEvasionHeuristic.Score(board, index, d);
+
+            if (score > bestScore) {
+                bestScore = score;
+                best = d;
+            }
+        }
+
+        return best;
+    }
 
     public static Point up(Point point) {
         return new Point(point.x, point.y+1);

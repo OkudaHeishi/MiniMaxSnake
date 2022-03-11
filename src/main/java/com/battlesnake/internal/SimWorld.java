@@ -3,11 +3,10 @@ package com.battlesnake.internal;
 import com.battlesnake.ai.utils;
 
 import java.awt.*;
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class SimWorld {
+public class SimWorld implements Cloneable{
 
     public Field[][] fields;
 
@@ -300,6 +299,10 @@ public class SimWorld {
         }
 
         ++turn;
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+        return new SimWorld(this);
     }
 
 
