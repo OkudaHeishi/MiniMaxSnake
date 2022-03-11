@@ -5,13 +5,14 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class Board {
     public int width;
     public int height;
     public ArrayList<Point> food;
-    public ArrayList<Snake> snakes;
+    public HashMap<String, Snake> snakes;
 
     public Board(JsonNode board) {
         this.width = board.get("width").asInt();
@@ -26,10 +27,10 @@ public class Board {
 
         ArrayNode snakeNodes = (ArrayNode) board.get("snakes");
 
-        this.snakes = new ArrayList<>();
+        this.snakes = new HashMap<>();
 
         for (JsonNode snakeNode: snakeNodes) {
-            this.snakes.add(new Snake(snakeNode));
+            this.snakes.put(snakeNode.get("id").asText(), new Snake(snakeNode));
         }
     }
 
